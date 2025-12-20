@@ -49,9 +49,6 @@ const SiteHeader = () => {
         <Toolbar>
           <Typography variant="h6" sx={{ flexGrow: 1 }}>
             
-            All you ever wanted to know about Movies!
-          </Typography>
-
           {/* AUTH BUTTONS */}
           {!isAuthenticated ? (
             <>
@@ -73,6 +70,9 @@ const SiteHeader = () => {
             </>
           
           )}
+            
+          </Typography>
+
 
           {/* MENU */}
           {isMobile ? (

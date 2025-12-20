@@ -16,8 +16,10 @@ import PopularMoviesPage from "./pages/popularMoviesPage";
 import ActorPage from "./pages/actorPage";
 import TopRatedPage from "./pages/topRatedPage";
 import DiscoverMoviesPage from "./pages/discoverMoviesPage";
+import ProtectedRoutes from "./protectedRoutes";
+import AuthProvider from "./contexts/AuthContext";  
+import LoginPage from "./pages/LoginPage";
 
-import AuthProvider from "./contexts/AuthContext.jsx";  
 
 
 
@@ -54,7 +56,7 @@ const App = () => {
               <Route path="/actors/:id" element={<ActorPage />} />
               <Route path="/movies/top-rated" element={<TopRatedPage />} />
               <Route path="/movies/discover" element={<DiscoverMoviesPage />} />
-              
+              <Route path="/login" element={<LoginPage />} />
 
               <Route path="*" element={<Navigate to="/" />} />
             </Routes>
