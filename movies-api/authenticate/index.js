@@ -1,28 +1,40 @@
-import jwt from 'jsonwebtoken';
-import User from '../api/users/userModel';
+import jwt from "jsonwebtoken";
+import User from "../api/users/userModel.js";
 
-const authenticate = async (request, response, next) => {
-    try { 
-        const authHeader = request.headers.authorization;
-        if (!authHeader) throw new Error('No authorization header');
+const authenticate = async (req, res, next) => {
+  try {
+    const authHeader = req.headers.authorization;
 
-        const token = authHeader.split(" ")[1];
-        if (!token) throw new Error('Bearer token not found');
-
-        const decoded = await jwt.verify(token, process.env.SECRET); 
-        console.log(decoded);
-
-        // Assuming decoded contains a username field
-        const user = await User.findByUserName(decoded.username); 
-        if (!user) {
-            throw new Error('User not found');
-        }
-        // Optionally attach the user to the request for further use
-        request.user = user; 
-        next();
-    } catch(err) {
-        next(new Error(`Verification Failed: ${err.message}`));
+    if (!authHeader) {
+      return res.status(401).json({ msg: "No authorization header" });
     }
+
+    const parts = authHeader.split(" ");
+
+    if (parts.length !== 2 || parts[0] !== "Bearer") {
+      return res.status(401).json({ msg: "Invalid authorization format" });
+    }
+
+    const token = parts[1];
+
+    let decoded;
+    try {
+      decoded = jwt.verify(token, process.env.SECRET);
+    } catch (err) {
+      return res.status(401).json({ msg: "Invalid token", error: err.message });
+    }
+
+    const user = await User.findByUserName(decoded.username);
+
+    if (!user) {
+      return res.status(401).json({ msg: "User not found" });
+    }
+
+    req.user = user;
+    next();
+  } catch (err) {
+    return res.status(500).json({ msg: "Authentication error", error: err.message });
+  }
 };
 
 export default authenticate;
