@@ -19,6 +19,7 @@ import DiscoverMoviesPage from "./pages/discoverMoviesPage";
 import ProtectedRoutes from "./protectedRoutes";
 import AuthProvider from "./contexts/AuthContext";  
 import LoginPage from "./pages/LoginPage";
+import ProfilePage from "./pages/ProfilePage";
 
 
 
@@ -57,6 +58,7 @@ const App = () => {
               <Route path="/movies/top-rated" element={<TopRatedPage />} />
               <Route path="/movies/discover" element={<DiscoverMoviesPage />} />
               <Route path="/login" element={<LoginPage />} />
+              <Route path="/profile" element={<ProfilePage />} />
 
               <Route path="*" element={<Navigate to="/" />} />
             </Routes>
