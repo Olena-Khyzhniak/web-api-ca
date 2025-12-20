@@ -1,12 +1,11 @@
-import React, { useState, useEffect, createContext } from "react";
+import React, { createContext, useState } from "react";
 
 export const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
-  const [token, setToken] = useState(() => localStorage.getItem("token"));
-  const [username, setUsername] = useState(() => localStorage.getItem("username"));
+  const [token, setToken] = useState(localStorage.getItem("token"));
+  const [username, setUsername] = useState(localStorage.getItem("username"));
 
-  // LOGIN
   const login = async (username, password) => {
     const res = await fetch("http://localhost:8080/api/users/login", {
       method: "POST",
@@ -27,7 +26,6 @@ const AuthProvider = ({ children }) => {
     return false;
   };
 
-  // REGISTER
   const register = async (username, password) => {
     const res = await fetch("http://localhost:8080/api/users/register", {
       method: "POST",
@@ -38,7 +36,6 @@ const AuthProvider = ({ children }) => {
     return res.json();
   };
 
-  // LOGOUT
   const logout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("username");
@@ -52,8 +49,8 @@ const AuthProvider = ({ children }) => {
         token,
         username,
         login,
-        logout,
         register,
+        logout,
         isAuthenticated: !!token,
       }}
     >

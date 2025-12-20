@@ -17,7 +17,7 @@ import ActorPage from "./pages/actorPage";
 import TopRatedPage from "./pages/topRatedPage";
 import DiscoverMoviesPage from "./pages/discoverMoviesPage";
 
-import AuthProvider from "./contexts/AuthContext";   // ← ДОБАВЛЕНО
+import AuthProvider from "./contexts/AuthContext.jsx";  
 
 
 
@@ -36,7 +36,7 @@ const queryClient = new QueryClient({
 const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
-      <AuthProvider> {/* ← ОБЕРНУЛИ ВСЁ ПРИЛОЖЕНИЕ */}
+      <AuthProvider> 
         <BrowserRouter>
           <SiteHeader />
 
@@ -54,6 +54,7 @@ const App = () => {
               <Route path="/actors/:id" element={<ActorPage />} />
               <Route path="/movies/top-rated" element={<TopRatedPage />} />
               <Route path="/movies/discover" element={<DiscoverMoviesPage />} />
+              
 
               <Route path="*" element={<Navigate to="/" />} />
             </Routes>
