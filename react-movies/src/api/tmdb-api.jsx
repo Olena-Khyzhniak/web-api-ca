@@ -25,6 +25,35 @@ export const getUserMovies = (token) => {
 
 
 
+export const saveFavoriteMovie = (movie, token) => {
+  return fetch("http://localhost:8080/api/movies", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: token,
+    },
+    body: JSON.stringify(movie),
+  }).then((response) => {
+    if (!response.ok) {
+      return response.json().then((error) => {
+        throw new Error(error.msg || "Failed to save movie");
+      });
+    }
+    return response.json();
+  });
+};
+
+
+export const deleteFavoriteMovie = (id, token) => {
+  return fetch(`http://localhost:8080/api/movies/${id}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: token,
+    },
+  });
+};
+
+
 
 export const getMovies = () => {
   return fetch(
