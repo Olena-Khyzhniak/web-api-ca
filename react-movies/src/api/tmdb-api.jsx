@@ -1,6 +1,27 @@
 
-//react-movies/src/api/tmdb-api.jsx
 
+
+
+
+
+export const getUserMovies = (token) => {
+  return fetch("http://localhost:8080/api/movies", {
+    headers: {
+      Authorization: token,
+    },
+  })
+    .then((response) => {
+      if (!response.ok) {
+        return response.json().then((error) => {
+          throw new Error(error.msg || "Failed to load user movies");
+        });
+      }
+      return response.json();
+    })
+    .catch((error) => {
+      throw error;
+    });
+};
 
 
 
