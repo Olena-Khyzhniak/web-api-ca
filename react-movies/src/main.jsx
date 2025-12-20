@@ -20,6 +20,7 @@ import ProtectedRoutes from "./protectedRoutes";
 import AuthProvider from "./contexts/AuthContext";  
 import LoginPage from "./pages/LoginPage";
 import ProfilePage from "./pages/ProfilePage";
+import SignUpPage from "./pages/SignUpPage";
 
 
 
@@ -57,8 +58,14 @@ const App = () => {
               <Route path="/actors/:id" element={<ActorPage />} />
               <Route path="/movies/top-rated" element={<TopRatedPage />} />
               <Route path="/movies/discover" element={<DiscoverMoviesPage />} />
+              
+              
               <Route path="/login" element={<LoginPage />} />
+              <Route path="/signup" element={<SignUpPage />} />
+
+              <Route element={<ProtectedRoutes />}>
               <Route path="/profile" element={<ProfilePage />} />
+              </Route>
 
               <Route path="*" element={<Navigate to="/" />} />
             </Routes>
