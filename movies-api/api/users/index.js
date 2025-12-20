@@ -1,69 +1,89 @@
-import express from 'express';
-import User from './userModel';
-import asyncHandler from 'express-async-handler';
-import jwt from 'jsonwebtoken';
+import express from "express";
+import User from "./userModel.js";
+import asyncHandler from "express-async-handler";
+import jwt from "jsonwebtoken";
 
-
-
-const router = express.Router(); 
+const router = express.Router();
 
 // Get all users
-router.get('/', async (req, res) => {
-    const users = await User.find();
-    res.status(200).json(users);
+router.get("/", async (req, res) => {
+  const users = await User.find();
+  res.status(200).json(users);
 });
 
+// Register or Login
+router.post(
+  "/",
+  asyncHandler(async (req, res) => {
+    const { username, password } = req.body;
 
-
-// register(Create)/Authenticate User
-router.post('/', asyncHandler(async (req, res) => {
-    try {
-        if (!req.body.username || !req.body.password) {
-            return res.status(400).json({ success: false, msg: 'Username and password are required.' });
-        }
-        if (req.query.action === 'register') {
-            await registerUser(req, res);
-        } else {
-            await authenticateUser(req, res);
-        }
-    } catch (error) {
-        // Log the error and return a generic error message
-        console.error(error);
-        res.status(500).json({ success: false, msg: 'Internal server error.' });
+    if (!username || !password) {
+      return res
+        .status(400)
+        .json({ success: false, msg: "Username and password are required." });
     }
-}));
 
-
-
-
+    if (req.query.action === "register") {
+      return registerUser(req, res);
+    } else {
+      return authenticateUser(req, res);
+    }
+  })
+);
 
 async function registerUser(req, res) {
-    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
-    if (!passwordRegex.test(req.body.password)) {
-        return res.status(400).json({ success: false, msg: 'Password must be at least 8 characters long and include letters, numbers, and special characters.' });
-    }   
-    const user = await User.create(req.body);
-    const token = jwt.sign({ username: user.username }, process.env.SECRET);
-    res.status(201).json({ success: true, msg: 'User successfully created.', token: 'BEARER ' + token });
-}
+  const { username, password } = req.body;
 
+  const passwordRegex =
+    /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
+
+  if (!passwordRegex.test(password)) {
+    return res.status(400).json({
+      success: false,
+      msg: "Password must be at least 8 characters long and include letters, numbers, and special characters.",
+    });
+  }
+
+  const existing = await User.findByUserName(username);
+  if (existing) {
+    return res.status(400).json({ success: false, msg: "User already exists." });
+  }
+
+  const user = await User.create({ username, password });
+
+  const token = jwt.sign({ username: user.username }, process.env.SECRET);
+
+  return res.status(201).json({
+    success: true,
+    msg: "User successfully created.",
+    token: "Bearer " + token,
+  });
+}
 
 async function authenticateUser(req, res) {
-    const user = await User.findByUserName(req.body.username);
-    if (!user) {
-        return res.status(401).json({ success: false, msg: 'Authentication failed. User not found.' });
-    }
+  const { username, password } = req.body;
 
-    const isMatch = await user.comparePassword(req.body.password);
-    if (isMatch) {
-        const token = jwt.sign({ username: user.username }, process.env.SECRET);
-        res.status(200).json({ success: true, token: 'BEARER ' + token });
-    } else {
-        res.status(401).json({ success: false, msg: 'Wrong password.' });
-    }
+  const user = await User.findByUserName(username);
+
+  if (!user) {
+    return res
+      .status(401)
+      .json({ success: false, msg: "Authentication failed. User not found." });
+  }
+
+  const isMatch = await user.comparePassword(password);
+
+  if (!isMatch) {
+    return res.status(401).json({ success: false, msg: "Wrong password." });
+  }
+
+  const token = jwt.sign({ username: user.username }, process.env.SECRET);
+
+  return res.status(200).json({
+    success: true,
+    token: "Bearer " + token,
+    username: user.username,
+  });
 }
-
-
-
 
 export default router;

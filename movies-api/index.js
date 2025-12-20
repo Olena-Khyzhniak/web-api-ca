@@ -4,7 +4,8 @@ import express from 'express';
 import moviesRouter from './api/movies';  
 import cors from 'cors';
 import usersRouter from './api/users';
-import authenticate from './authenticate';
+//import authenticate from "./authenticate";
+
 
 
 dotenv.config();
@@ -29,7 +30,9 @@ app.use(cors());
 
 app.use(express.json());
 
-app.use('/api/movies', authenticate, moviesRouter); 
+//app.use('/api/movies/discover', moviesRouter);
+
+app.use('/api/movies', moviesRouter); 
 
 app.use('/api/users', usersRouter);
 

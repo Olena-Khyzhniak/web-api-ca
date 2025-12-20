@@ -7,7 +7,7 @@ const AuthProvider = ({ children }) => {
   const [username, setUsername] = useState(localStorage.getItem("username"));
 
   const login = async (username, password) => {
-    const res = await fetch("http://localhost:8080/api/users/login", {
+    const res = await fetch("http://localhost:8080/api/users?action=login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, password }),
@@ -15,11 +15,13 @@ const AuthProvider = ({ children }) => {
 
     const data = await res.json();
 
-    if (data.token) {
+    if (data.success && data.token) {
       localStorage.setItem("token", data.token);
       localStorage.setItem("username", data.username);
+
       setToken(data.token);
       setUsername(data.username);
+
       return true;
     }
 
@@ -27,7 +29,7 @@ const AuthProvider = ({ children }) => {
   };
 
   const register = async (username, password) => {
-    const res = await fetch("http://localhost:8080/api/users/register", {
+    const res = await fetch("http://localhost:8080/api/users?action=register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, password }),

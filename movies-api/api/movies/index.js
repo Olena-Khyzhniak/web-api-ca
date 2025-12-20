@@ -2,7 +2,8 @@ import express from "express";
 import asyncHandler from "express-async-handler";
 import { getMovies } from "../tmdb-api";
 import Movie from "./movieModel";
-import authenticate from "../../authenticate.js";
+import authenticate from "../../authenticate";
+
 
 const router = express.Router();
 
@@ -16,6 +17,8 @@ router.get(
     res.status(200).json(discoverMovies);
   })
 );
+
+
 
 // PROTECTED ROUTES
 
