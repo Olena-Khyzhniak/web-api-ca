@@ -38,7 +38,7 @@ const TemplateMoviePage = ({ movie, children }) => {
           <div sx={{
             display: "flex",
             flexWrap: "wrap",
-            justifyContent: "space-around",
+            justifyContent: "center",
           }}>
             <ImageList
                 sx={{

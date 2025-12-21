@@ -32,7 +32,7 @@ export default function MovieCard({ movie, action }) {
   return (
     <Card
       sx={{
-        width: 220,
+        width: 230,
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
@@ -46,6 +46,11 @@ export default function MovieCard({ movie, action }) {
     >
       <CardHeader
 
+      sx={{
+    height: 80,             
+    paddingBottom: 0,
+  }}
+
         avatar={
     isFavorite ? (
       <Avatar sx={{ backgroundColor: "red" }}>
@@ -58,9 +63,9 @@ export default function MovieCard({ movie, action }) {
         title={
           <Typography
             variant="h6"
-            component="p"
+            component="div"
             align="center"
-            sx={{ fontWeight: "bold", fontSize: "1rem", paddingX: 1 }}
+            sx={{ fontWeight: "bold", WebkitLineClamp: 2, fontSize: "1rem", paddingX: 1 }}
           >
             {movie.title}
           </Typography>
@@ -70,7 +75,7 @@ export default function MovieCard({ movie, action }) {
       <Link to={`/movies/${movieId}`}>
         <CardMedia
           component="img"
-          sx={{ height: 300, objectFit: "cover" }}
+          sx={{ height: 260, objectFit: "cover" }}
           image={
             movie.poster_path
               ? `https://image.tmdb.org/t/p/w500/${movie.poster_path}`
@@ -90,7 +95,7 @@ export default function MovieCard({ movie, action }) {
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            gap: 3,
+            gap: 1,
             flexWrap: "wrap",
             justifyContent: "center",
           }}

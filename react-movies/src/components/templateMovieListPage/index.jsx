@@ -39,11 +39,13 @@ function MovieListPageTemplate({ movies, title, action }) {
   };
 
   return (
-    <Grid container>
+    <Grid container spacing={3}
+  justifyContent="center"
+  alignItems="flex-start">
       <Grid size={12}>
         <Header title={title} />
       </Grid>
-      <Grid container sx={{flex: "1 1 500px"}}>
+      <Grid container spacing={3} sx={{ mt: 2 }}>
         <Grid 
           key="find" 
           size={{xs: 12, sm: 6, md: 4, lg: 3, xl: 2}} 
@@ -56,6 +58,7 @@ function MovieListPageTemplate({ movies, title, action }) {
             sortBy={sortBy}
           />
         </Grid>
+      
                 <MovieList action={action} movies={displayedMovies}></MovieList>
 
       </Grid>

@@ -42,7 +42,7 @@ export default function FilterMoviesCard(props) {
   return (
     <Card
       sx={{
-        width: 200,
+        width: 230,
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
