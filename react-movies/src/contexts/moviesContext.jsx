@@ -1,6 +1,7 @@
 import React, { useState, useEffect, createContext, useContext } from "react";
 import { AuthContext } from "./AuthContext";
-import { getUserMovies, saveFavoriteMovie, deleteFavoriteMovie } from "../api/tmdb-api";
+import { getUserMovies, addMovie, deleteMovie } from "../api/movies-api";
+
 
 export const MoviesContext = createContext();
 
@@ -38,7 +39,7 @@ const MoviesContextProvider = (props) => {
         overview: movie.overview,
       };
 
-      saveFavoriteMovie(moviePayload, token)
+      addMovie(moviePayload, token)
         .then((savedMovie) => {
           setFavorites([...favorites, savedMovie]);
         })
@@ -51,7 +52,7 @@ const MoviesContextProvider = (props) => {
     const fav = favorites.find((f) => f.movieId === movie.id);
     if (!fav) return;
 
-    deleteFavoriteMovie(fav._id, token)
+    deleteMovie(fav._id, token)
       .then(() => {
         setFavorites(favorites.filter((f) => f.movieId !== movie.id));
       })

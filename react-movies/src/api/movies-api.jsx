@@ -6,7 +6,7 @@ const API_BASE = "http://localhost:8080/api/movies";
 export const getUserMovies = async (token) => {
   const response = await fetch(API_BASE, {
     headers: {
-      Authorization: token,
+      Authorization: `Bearer ${token}`,
     },
   });
 
@@ -23,7 +23,8 @@ export const addMovie = async (movieData, token) => {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: token,
+      Authorization: `Bearer ${token}`,
+
     },
     body: JSON.stringify(movieData),
   });
@@ -40,7 +41,7 @@ export const deleteMovie = async (id, token) => {
   const response = await fetch(`${API_BASE}/${id}`, {
     method: "DELETE",
     headers: {
-      Authorization: token,
+        Authorization: `Bearer ${token}`,
     },
   });
 
@@ -57,7 +58,7 @@ export const updateMovie = async (movieData, token) => {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
-      Authorization: token,
+        Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify(movieData),
   });
