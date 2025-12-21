@@ -4,19 +4,18 @@ import IconButton from "@mui/material/IconButton";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 
 const AddToFavoritesIcon = ({ movie }) => {
-  const context = useContext(MoviesContext);
+  const { addToFavorites } = useContext(MoviesContext);
 
-  const handleAddToFavorites = (e) => {
+  const handleAdd = (e) => {
     e.preventDefault();
-    context.addToFavorites(movie);
+    addToFavorites(movie);
   };
 
   return (
-    <IconButton aria-label="add to favorites" onClick={handleAddToFavorites}>
+    <IconButton aria-label="add to favorites" onClick={handleAdd}>
       <FavoriteIcon color="primary" fontSize="large" />
     </IconButton>
   );
 };
 
 export default AddToFavoritesIcon;
-
