@@ -15,7 +15,7 @@ const HomePage = () => {
 
   return (
     <PageTemplate
-      title="Discover Movies"
+      title="Best Movies For You"
       movies={data.results}
       action={(movie) => <AddToFavoritesIcon movie={movie} />}
     />
