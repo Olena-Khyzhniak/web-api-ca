@@ -8,29 +8,34 @@ function MovieListPageTemplate({ movies, title, action }) {
   const [nameFilter, setNameFilter] = useState("");
   const [genreFilter, setGenreFilter] = useState("0");
   const [sortBy, setSortBy] = useState("rating");
+
   const genreId = Number(genreFilter);
 
+ 
   let displayedMovies = movies
     .filter((m) => {
-      return m.title.toLowerCase().search(nameFilter.toLowerCase()) !== -1;
+      const title = m.title?.toLowerCase() || "";
+      return title.includes(nameFilter.toLowerCase());
     })
     .filter((m) => {
-      return genreId > 0 ? m.genre_ids.includes(genreId) : true;
+      const genres = m.genre_ids || []; 
+      return genreId > 0 ? genres.includes(genreId) : true;
     });
 
+  
+  displayedMovies.sort((a, b) => {
+    const ratingA = a.vote_average || a.voteAverage || 0;
+    const ratingB = b.vote_average || b.voteAverage || 0;
 
- if (sortBy === "rating") {
-    displayedMovies.sort((a, b) => b.vote_average - a.vote_average);
-  } else if (sortBy === "date") {
-    displayedMovies.sort(
-      (a, b) =>
-        new Date(b.release_date || "1900-01-01") -
-        new Date(a.release_date || "1900-01-01")
-    );
-  } else if (sortBy === "alphabetical") {
-    displayedMovies.sort((a, b) => a.title.localeCompare(b.title));
-  }
+    const dateA = new Date(a.release_date || a.releaseDate || "1900-01-01");
+    const dateB = new Date(b.release_date || b.releaseDate || "1900-01-01");
 
+    if (sortBy === "rating") return ratingB - ratingA;
+    if (sortBy === "date") return dateB - dateA;
+    if (sortBy === "alphabetical") return a.title.localeCompare(b.title);
+
+    return 0;
+  });
 
   const handleChange = (type, value) => {
     if (type === "name") setNameFilter(value);
@@ -39,17 +44,17 @@ function MovieListPageTemplate({ movies, title, action }) {
   };
 
   return (
-    <Grid container spacing={3}
-  justifyContent="center"
-  alignItems="flex-start">
+    <Grid container>
       <Grid size={12}>
         <Header title={title} />
       </Grid>
-      <Grid container spacing={3} sx={{ mt: 2 }}>
-        <Grid 
-          key="find" 
-          size={{xs: 12, sm: 6, md: 4, lg: 3, xl: 2}} 
-          sx={{padding: "20px"}}
+
+      <Grid container sx={{ flex: "1 1 500px" }}>
+        
+        <Grid
+          key="find"
+          size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
+          sx={{ padding: "20px" }}
         >
           <FilterCard
             onUserInput={handleChange}
@@ -58,11 +63,13 @@ function MovieListPageTemplate({ movies, title, action }) {
             sortBy={sortBy}
           />
         </Grid>
-      
-                <MovieList action={action} movies={displayedMovies}></MovieList>
+
+       
+        <MovieList action={action} movies={displayedMovies} />
 
       </Grid>
     </Grid>
   );
 }
+
 export default MovieListPageTemplate;
