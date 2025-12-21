@@ -1,48 +1,70 @@
+
+
 const API_BASE = "http://localhost:8080/api/movies";
 
-
-// get a user's movies
-export const getUserMovies = async () => {
+// Get movies for logged-in user
+export const getUserMovies = async (token) => {
   const response = await fetch(API_BASE, {
     headers: {
-      Authorization: window.localStorage.getItem("token"),
+      Authorization: token,
     },
   });
+
+  if (!response.ok) {
+    throw new Error("Failed to load user movies");
+  }
+
   return response.json();
 };
 
-// add a movie to user's favorites
-export const addMovie = async (movieData) => {
+// Add movie to user's favorites
+export const addMovie = async (movieData, token) => {
   const response = await fetch(API_BASE, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: window.localStorage.getItem("token"),
+      Authorization: token,
     },
     body: JSON.stringify(movieData),
   });
+
+  if (!response.ok) {
+    throw new Error("Failed to save movie");
+  }
+
   return response.json();
 };
 
-// delete a movie from user's favorites
-export const deleteMovie = async (id) => {
-  return fetch(`${API_BASE}/${id}`, {
+// Delete movie from user's favorites
+export const deleteMovie = async (id, token) => {
+  const response = await fetch(`${API_BASE}/${id}`, {
     method: "DELETE",
     headers: {
-      Authorization: window.localStorage.getItem("token"),
+      Authorization: token,
     },
   });
+
+  if (!response.ok) {
+    throw new Error("Failed to delete movie");
+  }
+
+  return response;
 };
 
-// update a movie
-export const updateMovie = async (movieData) => {
+
+export const updateMovie = async (movieData, token) => {
   const response = await fetch(`${API_BASE}/${movieData._id}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
-      Authorization: window.localStorage.getItem("token"),
+      Authorization: token,
     },
     body: JSON.stringify(movieData),
   });
+
+  if (!response.ok) {
+    throw new Error("Failed to update movie");
+  }
+
   return response.json();
 };
