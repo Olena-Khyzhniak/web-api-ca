@@ -1,42 +1,25 @@
 import React from "react";
+import PageTemplate from "../components/templateMovieListPage";
+import AddToFavoritesIcon from "../components/cardIcons/addToFavorites";
+import { useQuery } from "@tanstack/react-query";
 import { getMovies } from "../api/tmdb-api";
-import PageTemplate from '../components/templateMovieListPage';
-import { useQuery } from '@tanstack/react-query';
-import Spinner from '../components/spinner';
-import AddToFavoritesIcon from '../components/cardIcons/addToFavorites'
 
-
-const HomePage = (props) => {
-
-  const { data, error, isPending, isError  } = useQuery({
-    queryKey: ['home'],
+const HomePage = () => {
+  const { data, error, isLoading } = useQuery({
+    queryKey: ["discover"],
     queryFn: getMovies,
-  })
-  
-  if (isPending) {
-    return <Spinner />
-  }
+  });
 
-  if (isError) {
-    return <h1>{error.message}</h1>
-  }  
-  
-  const movies = data.results;
+  if (isLoading) return <h2>Loading...</h2>;
+  if (error) return <h2>Error loading movies</h2>;
 
-  // Redundant, but necessary to avoid app crashing.
-  const favorites = movies.filter(m => m.favorite)
-  localStorage.setItem('favorites', JSON.stringify(favorites))
-  const addToFavorites = (movieId) => true 
-
-     return (
-      <PageTemplate
-        title="Best Movies For You"
-        movies={movies}
-        action={(movie) => {
-          return <AddToFavoritesIcon movie={movie} />
-        }}
-      />
+  return (
+    <PageTemplate
+      title="Discover Movies"
+      movies={data.results}
+      action={(movie) => <AddToFavoritesIcon movie={movie} />}
+    />
   );
-
 };
+
 export default HomePage;
