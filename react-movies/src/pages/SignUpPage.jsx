@@ -1,22 +1,26 @@
 import { useContext, useState } from "react";
-import { Navigate } from "react-router-dom";
+import { Navigate, Link } from "react-router-dom";
 import { AuthContext } from "../contexts/AuthContext";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import Typography from "@mui/material/Typography";
+import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
+import Box from "@mui/material/Box";
 
 const SignUpPage = () => {
-  const context = useContext(AuthContext);
+  const { register } = useContext(AuthContext);
 
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const [passwordAgain, setPasswordAgain] = useState("");
   const [registered, setRegistered] = useState(false);
 
-  const register = async () => {
+  const handleRegister = async () => {
     const passwordRegEx =
       /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
 
-    const validPassword = passwordRegEx.test(password);
-
-    if (!validPassword) {
+    if (!passwordRegEx.test(password)) {
       alert("Password must contain 8 chars, 1 letter, 1 number, 1 symbol.");
       return;
     }
@@ -26,9 +30,8 @@ const SignUpPage = () => {
       return;
     }
 
-    const result = await context.register(userName, password);
-
-    setRegistered(result.success === true || result.token);
+    const result = await register(userName, password);
+    setRegistered(result.success === true || !!result.token);
   };
 
   if (registered) {
@@ -36,39 +39,65 @@ const SignUpPage = () => {
   }
 
   return (
-    <>
-      <h2>SignUp page</h2>
-      <p>
-        You must register a username and password to log in. Usernames must be
-        unique and passwords must contain a minimum of 8 characters (with at
-        least one uppercase letter, one lowercase letter, and one symbol).
-      </p>
+    <Box
+      sx={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        minHeight: "80vh",
+      }}
+    >
+      <Card sx={{ width: 400, p: 3, boxShadow: 5, borderRadius: 3 }}>
+        <CardContent>
+          <Typography variant="h5" align="center" gutterBottom>
+            Sign Up
+          </Typography>
+          <Typography variant="body2" align="center" color="text.secondary">
+            You must register a username and password to log in. Passwords must
+            contain at least 8 characters, one letter, one number, and one
+            symbol.
+          </Typography>
 
-      <input
-        value={userName}
-        placeholder="user name"
-        onChange={(e) => setUserName(e.target.value)}
-      />
-      <br />
+          <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 2 }}>
+            <TextField
+              label="Username"
+              variant="outlined"
+              value={userName}
+              onChange={(e) => setUserName(e.target.value)}
+              fullWidth
+            />
+            <TextField
+              label="Password"
+              type="password"
+              variant="outlined"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              fullWidth
+            />
+            <TextField
+              label="Confirm Password"
+              type="password"
+              variant="outlined"
+              value={passwordAgain}
+              onChange={(e) => setPasswordAgain(e.target.value)}
+              fullWidth
+            />
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleRegister}
+              fullWidth
+            >
+              Register
+            </Button>
+          </Box>
 
-      <input
-        value={password}
-        type="password"
-        placeholder="password"
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <br />
-
-      <input
-        value={passwordAgain}
-        type="password"
-        placeholder="password again"
-        onChange={(e) => setPasswordAgain(e.target.value)}
-      />
-      <br />
-
-      <button onClick={register}>Register</button>
-    </>
+          <Typography variant="body2" align="center" sx={{ mt: 2 }}>
+            Already have an account? <Link to="/login">Log In</Link>
+          </Typography>
+        </CardContent>
+      </Card>
+    </Box>
   );
 };
 
